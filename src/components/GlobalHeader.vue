@@ -48,7 +48,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { h, ref } from 'vue'
+import { computed, h, ref } from 'vue'
 import {
   MailOutlined,
   AppstoreOutlined,
@@ -63,7 +63,7 @@ import { logoutUsingPost } from '@/api/userController.ts'
 const loginUserStore = useLoginUserStore()
 // 当前高亮的菜单项
 const current = ref<string[]>(['mail'])
-const items = ref<MenuProps['items']>([
+const originItems = [
   {
     key: '/',
     icon: () => h(HomeOutlined),
@@ -80,7 +80,7 @@ const items = ref<MenuProps['items']>([
     label: h('a', { href: 'https://www.github.com', target: '_blank' }, 'GitHub'),
     title: 'GitHub',
   },
-])
+]
 
 const router = useRouter()
 
@@ -88,6 +88,24 @@ const router = useRouter()
 const doMenuClick = ({ key }) => {
   router.push(key)
 }
+
+// 根据权限过滤菜单项
+const filterMenu = (menus = [] as MenuProps['items']) => {
+  return menus?.filter((menu) => {
+    if (menu?.key?.toString().startsWith('/admin')) {
+      const loginUser = loginUserStore.loginUser
+      if (!loginUser || loginUser.userRole !== 'admin') {
+        return false;
+      }
+    }
+    return true;
+  })
+}
+
+// 过滤菜单项
+const items = computed(() => {
+  return filterMenu(originItems)
+})
 
 // 用户注销
 const doLogout = async () => {
