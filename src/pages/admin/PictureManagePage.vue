@@ -20,11 +20,12 @@
           style="min-width: 180px;" allow-clear></a-select>
       </a-form-item>
 
-      <a-form-item style="display: flex; align-items: center; margin-left: 8px;">
-        <a-button type="primary" href="/add_picture" target="_blank"> + 创建图片</a-button>
-      </a-form-item>
     </a-form>
-
+    <div style="text-align: right;">
+      <a-button type="primary" href="/add_picture/batch" target="_blank" ghost style="margin-right: 16px;">+
+        批量创建图片</a-button>
+      <a-button type="primary" href="/add_picture" target="_blank" style="text-align: right;"> + 创建图片</a-button>
+    </div>
     <div style="margin-bottom: 16px"></div>
 
     <a-table :columns="columns" :data-source="dataList" :pagination="pagination" @change="doTableChange">
