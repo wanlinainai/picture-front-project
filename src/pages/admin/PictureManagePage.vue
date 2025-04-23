@@ -22,9 +22,9 @@
 
     </a-form>
     <div style="text-align: right;">
-      <a-button type="primary" href="/add_picture/batch" target="_blank" ghost style="margin-right: 16px;">+
+      <a-button type="primary" href="/add_picture/batch" target="_self" ghost style="margin-right: 16px;">+
         批量创建图片</a-button>
-      <a-button type="primary" href="/add_picture" target="_blank" style="text-align: right;"> + 创建图片</a-button>
+      <a-button type="primary" href="/add_picture" target="_self" style="text-align: right;"> + 创建图片</a-button>
     </div>
     <div style="margin-bottom: 16px"></div>
 
