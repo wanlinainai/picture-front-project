@@ -17,9 +17,8 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { PlusOutlined, LoadingOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
-import type { UploadChangeParam, UploadProps } from 'ant-design-vue'
+import type { UploadProps } from 'ant-design-vue'
 import { uploadPictureUsingPost } from '@/api/pictureController.ts'
 
 interface Props {
@@ -49,6 +48,7 @@ const handleUpload = async ({ file }: any) => {
       message.error('上传失败' + res.data.message)
     }
   } catch (error) {
+    
     console.error("图片上传失败" + error)
     message.error('上传失败' + error)
   }
