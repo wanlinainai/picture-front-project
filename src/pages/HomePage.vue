@@ -2,16 +2,11 @@
   <div id="homePage">
     <!--    搜索框-->
     <div class="search-bar">
-      <a-input-search
-        v-model:value="searchParams.searchText"
-        placeholder="从海量图片中搜索"
-        enter-button="搜索"
-        size="large"
-        @search="doSearch"
-      />
+      <a-input-search v-model:value="searchParams.searchText" placeholder="从海量图片中搜索" enter-button="搜索" size="large"
+        @search="doSearch" />
     </div>
 
-<!--    分类和标签筛选-->
+    <!--    分类和标签筛选-->
     <a-tabs v-model:active-key="selectedCategory" @change="doSearch">
       <a-tab-pane key="all" tab="全部"></a-tab-pane>
       <a-tab-pane v-for="category in categoryList" :tab="category" :key="category"></a-tab-pane>
@@ -19,29 +14,22 @@
     <div class="tag-bar">
       <span style="margin-right: 8px">标签：</span>
       <a-space :size="[0, 8]" wrap>
-        <a-checkable-tag
-          v-for="(tag, index) in tagList"
-          :key="tag"
-          v-model:checked="selectedTagList[index]"
-          @change="doSearch"
-        >
+        <a-checkable-tag v-for="(tag, index) in tagList" :key="tag" v-model:checked="selectedTagList[index]"
+          @change="doSearch">
           {{ tag }}
         </a-checkable-tag>
       </a-space>
     </div>
-<!--    图片列表-->
-    <a-list
-      :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 5, xxl: 6 }"
-      :data-source="dataList"
-      :pagination="pagination"
-      :loading="loading"
-    >
+    <!--    图片列表-->
+    <a-list :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 5, xxl: 6 }" :data-source="dataList"
+      :pagination="pagination" :loading="loading">
       <template #renderItem="{ item: picture }">
         <a-list-item style="padding: 0">
           <!--          单张图片-->
-          <a-card hoverable @click="doClickPicture(picture)" >
+          <a-card hoverable @click="doClickPicture(picture)">
             <template #cover>
-              <img :alt="picture.name" :src="picture.url" style="height: 180px; object-fit: cover"/>
+              <img :alt="picture.name" :src="picture.thumbnailUrl ?? picture.url"
+                style="height: 180px; object-fit: cover" />
             </template>
             <a-card-meta :title="picture.name">
               <template #description>
