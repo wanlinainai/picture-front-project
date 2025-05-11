@@ -13,12 +13,7 @@
       </a-col>
       <!-- 中间栏 -->
       <a-col flex="auto">
-        <a-menu
-          v-model:selectedKeys="current"
-          mode="horizontal"
-          :items="items"
-          @click="doMenuClick"
-        />
+        <a-menu v-model:selectedKeys="current" mode="horizontal" :items="items" @click="doMenuClick" />
       </a-col>
       <!-- 登录栏 -->
       <a-col flex="120px">
@@ -34,6 +29,12 @@
                   <a-menu-item @click="doLogout">
                     <LogoutOutlined />
                     退出登录
+                  </a-menu-item>
+                  <a-menu-item>
+                    <router-link to="/my_space">
+                      <UserOutlined />
+                      我的空间
+                    </router-link>
                   </a-menu-item>
                 </a-menu>
               </template>
@@ -55,6 +56,7 @@ import {
   SettingOutlined,
   LogoutOutlined,
   HomeOutlined,
+  UserOutlined,
 } from '@ant-design/icons-vue'
 import { MenuProps, message } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
@@ -131,7 +133,7 @@ const doLogout = async () => {
     })
     message.success('已退出登录')
     await router.push('/user/login')
-  } else{
+  } else {
     message.error("退出登录失败" + res.data.message)
   }
 }
