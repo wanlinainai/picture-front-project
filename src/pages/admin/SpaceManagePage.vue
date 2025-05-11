@@ -16,7 +16,7 @@
       </a-form-item>
     </a-form>
     <div style="text-align: right;">
-      <a-button type="primary" href="/add_picture" target="_self" style="text-align: right;"> + 创建图片</a-button>
+      <a-button type="primary" href="/add_space" target="_self" style=" text-align: right;"> + 创建空间</a-button>
     </div>
     <div style="margin-bottom: 16px"></div>
 
@@ -42,7 +42,7 @@
 
         <template v-else-if="column.key === 'action'">
           <a-space wrap>
-            <a-button type="link" :href="`/add_space?id=${record.id}`" target="_blank">编辑</a-button>
+            <a-button type="link" :href="`/add_space?id=${record.id}`" target="_self">编辑</a-button>
           </a-space>
           <a-button type="link" danger @click="doDelete(record.id)">删除</a-button>
         </template>
@@ -149,4 +149,9 @@ const doTableChange = async (page: any) => {
 onMounted(() => {
   fetchData()
 })
+
+// 删除事件
+const doDelete = async (id: number) => {
+
+}
 </script>
