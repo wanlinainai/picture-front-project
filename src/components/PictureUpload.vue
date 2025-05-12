@@ -22,6 +22,7 @@ import type { UploadProps } from 'ant-design-vue'
 import { uploadPictureUsingPost } from '@/api/pictureController.ts'
 
 interface Props {
+  spaceId?: number
   picture?: API.PictureVO
   onSuccess?: (newPicture: API.PictureVO) => void
 }
@@ -38,7 +39,8 @@ const imageUrl = ref<string>('')
 const handleUpload = async ({ file }: any) => {
   loading.value = true
   try {
-    const params = props.picture ? {id: props.picture.id} : {}
+    const params : API.PictureUploadRequest= props.picture ? {id: props.picture.id} : {}
+    params.spaceId = props.spaceId
     const res = await uploadPictureUsingPost(params, {}, file)
     if (res.data.code === 0 && res.data.data) {
       message.success('上传成功')

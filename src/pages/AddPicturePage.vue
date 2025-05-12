@@ -1,15 +1,18 @@
 <template>
   <div id="addPicturePage">
-    <h2 style="margin-bottom: 16px">{{route.query?.id ? '修改图片' : '创建图片'}}</h2>
+    <h2 style="margin-bottom: 16px">{{ route.query?.id ? '修改图片' : '创建图片' }}</h2>
+    <a-typography-paragraph v-if="spaceId" type="secondary">
+      保存至空间: <a href="`/space/${spaceId}`" target="_self"></a>{{ spaceId }}
+    </a-typography-paragraph>
     <!--    图片上传组件-->
-        <a-tabs v-model:activeKey="uploadType">
-          <a-tab-pane key="file" tab="文件上传">
-            <PictureUpload :picture="picture" :onSuccess="onSuccess"></PictureUpload>
-          </a-tab-pane>
-          <a-tab-pane key="url" tab="URL上传" force-render>
-            <UrlPictureUpload :picture="picture" :onSuccess="onSuccess"></UrlPictureUpload>
-          </a-tab-pane>
-        </a-tabs>
+    <a-tabs v-model:activeKey="uploadType">
+      <a-tab-pane key="file" tab="文件上传">
+        <PictureUpload :picture="picture" :spaceId="spaceId" :onSuccess="onSuccess"></PictureUpload>
+      </a-tab-pane>
+      <a-tab-pane key="url" tab="URL上传" force-render>
+        <UrlPictureUpload :picture="picture" :spaceId="spaceId"  :onSuccess="onSuccess"></UrlPictureUpload>
+      </a-tab-pane>
+    </a-tabs>
     <!--    图片信息表单-->
     <a-form v-if="picture" layout="vertical" :model="pictureForm" @finish="handleSubmit">
       <a-form-item label="名称" name="name">
@@ -54,11 +57,11 @@
 
 <script setup lang="ts">
 import PictureUpload from '@/components/PictureUpload.vue'
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import {
   editPictureUsingPost,
   getPictureByIdUsingGet,
-  listPictureTagCategoryUsingGet
+  listPictureTagCategoryUsingGet,
 } from '@/api/pictureController.ts'
 import { message } from 'ant-design-vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -66,15 +69,18 @@ import UrlPictureUpload from '@/components/UrlPictureUpload.vue'
 
 const uploadType = ref<'file' | 'url'>('file')
 const picture = ref<API.PictureVO>()
+const router = useRouter()
+const route = useRoute()
+// 空间id
+const spaceId = computed(() => {
+  return route.query?.spaceId
+})
 
 const pictureForm = reactive<API.PictureVO>({})
 const onSuccess = (newPicture: API.PictureVO) => {
   picture.value = newPicture
   pictureForm.name = newPicture.name
 }
-
-
-const router = useRouter();
 
 // 提交表单
 const handleSubmit = async (values: any) => {
@@ -84,7 +90,8 @@ const handleSubmit = async (values: any) => {
   }
   const res = await editPictureUsingPost({
     id: pictureId,
-    ...values
+    spaceId: spaceId.value,
+    ...values,
   })
   if (res.data.code === 0 && res.data.data) {
     message.success('创建成功')
@@ -93,7 +100,7 @@ const handleSubmit = async (values: any) => {
       path: `/picture/${pictureId}`,
     })
   } else {
-    message.error('创建失败:' + res.data.message);
+    message.error('创建失败:' + res.data.message)
   }
 }
 
@@ -101,23 +108,23 @@ const categoryOptions = ref<string[]>([])
 const tagOptions = ref<string[]>([])
 // 获取标签和分类选项
 const getTagCategoryOptions = async () => {
-  const res = await listPictureTagCategoryUsingGet();
+  const res = await listPictureTagCategoryUsingGet()
   if (res.data.code === 0 && res.data.data) {
     // 转换成下拉选项中的信息
     tagOptions.value = (res.data.data.tagList ?? []).map((data: string) => {
       return {
         value: data,
-        label: data
+        label: data,
       }
     })
     categoryOptions.value = (res.data.data.categoryList ?? []).map((data: string) => {
       return {
         value: data,
-        label: data
+        label: data,
       }
     })
   } else {
-    message.error('获取标签和分类选项失败:' + res.data.message);
+    message.error('获取标签和分类选项失败:' + res.data.message)
   }
 }
 
@@ -125,14 +132,13 @@ onMounted(() => {
   getTagCategoryOptions()
 })
 
-const route = useRoute()
 // 获取老数据
 const getOldPicture = async () => {
   // 获取数据
   const id = route.query?.id
   if (id) {
     const res = await getPictureByIdUsingGet({
-      id: id
+      id: id,
     })
     if (res.data.code === 0 && res.data.data) {
       const data = res.data.data
@@ -148,7 +154,6 @@ const getOldPicture = async () => {
 onMounted(() => {
   getOldPicture()
 })
-
 </script>
 
 <style>
