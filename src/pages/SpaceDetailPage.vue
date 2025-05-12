@@ -21,7 +21,7 @@
     </a-flex>
     <div style="margin-bottom: 16px"></div>
     <!--    图片列表-->
-    <PictureList :dataList="dataList" :loading="loading" />
+    <PictureList :dataList="dataList" :loading="loading" show-op :on-reload="fetchData"/>
     <!--    分页-->
     <a-pagination
       style="text-align: right"

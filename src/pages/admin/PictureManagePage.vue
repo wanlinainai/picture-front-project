@@ -166,6 +166,7 @@ let searchParams = reactive<API.PictureQueryRequest>({
 const fetchData = async () => {
   const res = await listPictureByPageUsingPost({
     ...searchParams,
+    nullSpaceId: true
   })
   if (res.data.data) {
     console.log('获取到的图片数据是:', res.data.data.records)
