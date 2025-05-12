@@ -86,15 +86,16 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, createVNode, onMounted, reactive, ref } from 'vue'
 import {
   deletePictureUsingPost,
   doPictureReviewUsingPost,
   listPictureByPageUsingPost
 } from '@/api/pictureController.ts'
-import { message } from 'ant-design-vue'
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { message, Modal } from 'ant-design-vue'
 import dayjs from 'dayjs'
-import { PIC_REVIEW_STATUS_ENUM, PIC_REVIEW_STATUS_MAP } from '@/constants/picture'
+import { PIC_REVIEW_STATUS_ENUM, PIC_REVIEW_STATUS_MAP, PIC_REVIEW_STATUS_OPTIONS } from '@/constants/picture'
 
 const columns = [
   {
@@ -179,14 +180,36 @@ const fetchData = async () => {
 
 // 删除图片
 const doDelete = async (id: number) => {
-  // todo: 增加删除前的确认弹框
-  const res = await deletePictureUsingPost({ id })
-  if (res.data.code === 0) {
-    message.success('删除成功')
-    await fetchData()
-  } else {
-    message.error('删除失败')
-  }
+  Modal.confirm({
+    title: '确认删除吗？',
+    icon: createVNode(ExclamationCircleOutlined),
+    content: '删了可就没了呦~',
+    okText: '确认',
+    cancelText: '取消',
+    okButtonProps: {
+      type: 'primary',
+      danger:true
+    },
+    cancelButtonProps: {
+      type: 'default',
+      style: {
+        color: '#666',
+        borderColor: '#ccc',
+        backgroundColor: '#f8f8f8'
+      }
+    },
+    async onOk() {
+      const res = await deletePictureUsingPost({ id })
+      if (res.data.code === 0) {
+        message.success('删除成功')
+        await fetchData()
+      } else {
+        message.error('删除失败')
+      }
+    },
+    onCancel() {
+    }
+  })
 }
 
 // 搜索
