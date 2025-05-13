@@ -19,6 +19,7 @@
         </a-tooltip>
       </a-space>
     </a-flex>
+    <PictureSearchForm/>
     <div style="margin-bottom: 16px"></div>
     <!--    图片列表-->
     <PictureList :dataList="dataList" :loading="loading" show-op :on-reload="fetchData"/>
@@ -40,6 +41,7 @@ import { message } from 'ant-design-vue'
 import { listPictureVoByPageUsingPost } from '@/api/pictureController.ts'
 import { formatSize } from '@/utils'
 import PictureList from '@/components/PictureList.vue'
+import PictureSearchForm from '@/components/PictureSearchForm.vue'
 
 interface Props {
   id: string | number

@@ -19,7 +19,6 @@
         <a-select v-model:value="searchParams.reviewStatus" :options="PIC_REVIEW_STATUS_OPTIONS" placeholder="请输入审核状态"
           style="min-width: 180px;" allow-clear></a-select>
       </a-form-item>
-
     </a-form>
     <div style="text-align: right;">
       <a-button type="primary" href="/add_picture/batch" target="_self" ghost style="margin-right: 16px;">+
@@ -96,6 +95,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { message, Modal } from 'ant-design-vue'
 import dayjs from 'dayjs'
 import { PIC_REVIEW_STATUS_ENUM, PIC_REVIEW_STATUS_MAP, PIC_REVIEW_STATUS_OPTIONS } from '@/constants/picture'
+import PictureQueryRequest = API.PictureQueryRequest
 
 const columns = [
   {
@@ -162,6 +162,11 @@ let searchParams = reactive<API.PictureQueryRequest>({
   sortField: 'createTime',
   sortOrder: 'descend',
 })
+
+interface Props {
+  onSearch?: (searchParams: PictureQueryRequest) => void
+}
+const props = defineProps<Props>()
 
 // 获取数据
 const fetchData = async () => {
