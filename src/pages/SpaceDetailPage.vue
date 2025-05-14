@@ -19,7 +19,7 @@
         </a-tooltip>
       </a-space>
     </a-flex>
-    <PictureSearchForm/>
+    <PictureSearchForm :on-search="onSearch"/>
     <div style="margin-bottom: 16px"></div>
     <!--    图片列表-->
     <PictureList :dataList="dataList" :loading="loading" show-op :on-reload="fetchData"/>
@@ -88,7 +88,7 @@ const dataList = ref([])
 let total = ref(0)
 const loading = ref(true)
 // 搜索条件
-let searchParams = reactive<API.PictureQueryRequest>({
+let searchParams = ref<API.PictureQueryRequest>({
   current: 1,
   pageSize: 12,
   sortField: 'createTime',
@@ -100,7 +100,7 @@ const fetchData = async () => {
   loading.value = true
   // 转换搜索参数
   const params = {
-    ...searchParams,
+    ...searchParams.value,
     spaceId: props.id,
   }
 
@@ -117,8 +117,18 @@ const fetchData = async () => {
 
 // 分页参数
 const onPageChange = (page: number, pageSize: number) => {
-  searchParams.current = page
-  searchParams.pageSize = pageSize
+  searchParams.value.current = page
+  searchParams.value.pageSize = pageSize
+  fetchData()
+}
+
+// 搜索
+const onSearch = (newSearchParams: API.PictureQueryRequest) => {
+  searchParams.value = {
+    ...searchParams.value,
+    ...newSearchParams,
+    current: 1
+  }
   fetchData()
 }
 
