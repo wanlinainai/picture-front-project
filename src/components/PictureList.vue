@@ -30,6 +30,10 @@
               </template>
             </a-card-meta>
             <template #actions v-if="showOp">
+              <a-space @click="(e) => {doSearch(picture, e)}">
+                <search-outlined></search-outlined>
+                搜索
+              </a-space>
               <a-space @click="e => doEdit(picture, e)">
                 <edit-outlined></edit-outlined>
                 编辑
@@ -48,7 +52,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons-vue'
+import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons-vue'
 import { deletePictureUsingPost } from '@/api/pictureController.ts'
 import { message } from 'ant-design-vue'
 interface Props {
@@ -70,6 +74,18 @@ const router = useRouter()
 const doClickPicture = (picture: API.PictureVO) => {
   router.push({
     path: `/picture/${picture.id}`,
+  })
+}
+
+// 搜索
+const doSearch = (picture, e) => {
+  // 阻止冒泡
+  e.stopPropagation()
+  router.push({
+    path: '/search_picture',
+    query: {
+      pictureId: picture.id
+    }
   })
 }
 

@@ -11,6 +11,12 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponseListImageSearchResult_ = {
+    code?: number
+    data?: ImageSearchResult[]
+    message?: string
+  }
+
   type BaseResponseListSpaceLevel_ = {
     code?: number
     data?: SpaceLevel[]
@@ -122,6 +128,11 @@ declare namespace API {
   type getUserVoByIdUsingGETParams = {
     /** id */
     id?: number
+  }
+
+  type ImageSearchResult = {
+    fromUrl?: string
+    thumbUrl?: string
   }
 
   type LoginUserVo = {
@@ -257,6 +268,10 @@ declare namespace API {
     url?: string
     user?: UserVo
     userId?: number
+  }
+
+  type SearchPictureByPictureRequest = {
+    pictureId?: number
   }
 
   type Space = {
