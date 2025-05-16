@@ -13,7 +13,7 @@ const doSearch = () => {
 }
 
 interface Props {
-  onSearch: (searchParams: PictureQueryRequest) => void
+  onSearch: (searchParams: PictureQueryRequest) => void,
 }
 
 const props = defineProps<Props>()
