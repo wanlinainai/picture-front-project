@@ -71,6 +71,13 @@
               </template>
             </a-button>
 
+            <a-button type="primary" ghost @click="doShare"
+            >分享
+              <template #icon>
+                <EditOutlined />
+              </template>
+            </a-button>
+
             <a-button v-if="canEdit" danger @click="doDelete"
               >删除
               <template #icon>
@@ -89,6 +96,7 @@
       </a-col>
     </a-row>
   </div>
+  <ShareModal ref="shareModalRef" :link="shareLink"/>
 </template>
 
 <script setup lang="ts">
@@ -104,6 +112,7 @@ import { DeleteOutlined, EditOutlined, DownloadOutlined } from '@ant-design/icon
 import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
 import { useRouter } from 'vue-router'
 import { toHexColor } from '@/constants/picture.ts'
+import ShareModal from '@/components/ShareModal.vue'
 
 interface Props {
   id: string | number
@@ -178,6 +187,18 @@ const doDownload = () => {
 onMounted(() => {
   fetchPictureDetail()
 })
+
+/**
+ * 分享
+ */
+const shareModalRef = ref()
+const shareLink = ref<string>()
+const doShare = () => {
+  shareLink.value = `${window.location.protocol}//${window.location.host}/picture/${picture.value.id}`
+  if (shareModalRef.value){
+    shareModalRef.value.openModal()
+  }
+}
 </script>
 
 <style>
