@@ -10,18 +10,33 @@
         <PictureUpload :picture="picture" :spaceId="spaceId" :onSuccess="onSuccess"></PictureUpload>
       </a-tab-pane>
       <a-tab-pane key="url" tab="URL上传" force-render>
-        <UrlPictureUpload :picture="picture" :spaceId="spaceId"  :onSuccess="onSuccess"></UrlPictureUpload>
+        <UrlPictureUpload
+          :picture="picture"
+          :spaceId="spaceId"
+          :onSuccess="onSuccess"
+        ></UrlPictureUpload>
       </a-tab-pane>
     </a-tabs>
     <div v-if="picture" class="edit-bar">
-      <a-button :icon="h(EditOutlined)" @click="doEditPicture">编辑图片</a-button>
-      <ImageCropper
-        ref="imageCropperRef"
-        :imgUrl="picture?.url"
-        :picture="picture"
-        :spaceId="spaceId"
-        :onSuccess="onCropSuccess"
-      />
+      <a-space size="middle">
+        <a-button :icon="h(EditOutlined)" @click="doEditPicture">编辑图片</a-button>
+        <a-button type="primary" ghost :icon="h(FullscreenOutlined)" @click="doImagePainting">
+          AI 扩图
+        </a-button>
+        <ImageCropper
+          ref="imageCropperRef"
+          :imgUrl="picture?.url"
+          :picture="picture"
+          :spaceId="spaceId"
+          :onSuccess="onCropSuccess"
+        />
+        <ImageOutPainting
+          :picture="picture"
+          ref="imageOutPaintingRef"
+          :spaceId="spaceId"
+          :onSuccess="onImageOutPaintingSuccess"
+        />
+      </a-space>
     </div>
     <!--    图片信息表单-->
     <a-form v-if="picture" layout="vertical" :model="pictureForm" @finish="handleSubmit">
@@ -56,10 +71,13 @@
           :options="tagOptions"
           allow-clear
         ></a-select>
-      </a-form-item>`
+      </a-form-item>
+      `
 
       <a-form-item>
-        <a-button type="primary" html-type="submit" style="width: 100%" v-if="route.query?.id">修改</a-button>
+        <a-button type="primary" html-type="submit" style="width: 100%" v-if="route.query?.id"
+          >修改
+        </a-button>
         <a-button type="primary" html-type="submit" style="width: 100%" v-else>创建</a-button>
       </a-form-item>
     </a-form>
@@ -77,8 +95,9 @@ import {
 import { message } from 'ant-design-vue'
 import { useRoute, useRouter } from 'vue-router'
 import UrlPictureUpload from '@/components/UrlPictureUpload.vue'
-import { EditOutlined } from '@ant-design/icons-vue'
+import { EditOutlined, FullscreenOutlined } from '@ant-design/icons-vue'
 import ImageCropper from '@/components/ImageCropper.vue'
+import ImageOutPainting from '@/components/ImageOutPainting.vue'
 
 const uploadType = ref<'file' | 'url'>('file')
 const picture = ref<API.PictureVO>()
@@ -178,6 +197,22 @@ const onCropSuccess = (newPicture: API.PictureVO) => {
   picture.value = newPicture
 }
 
+// AI 扩图弹窗引用
+const imageOutPaintingRef = ref()
+/**
+ * AI 扩图
+ */
+const doImagePainting = () => {
+  if (imageOutPaintingRef.value) {
+    imageOutPaintingRef.value.openModal()
+  }
+}
+
+// 编辑成功事件
+const onImageOutPaintingSuccess = (newPicture: API.PictureVO) => {
+  picture.value = newPicture
+}
+
 onMounted(() => {
   getOldPicture()
 })
@@ -188,6 +223,7 @@ onMounted(() => {
   max-width: 720px;
   margin: 0 auto;
 }
+
 #addPicturePage .edit-bar {
   text-align: center;
   margin: 16px 0;

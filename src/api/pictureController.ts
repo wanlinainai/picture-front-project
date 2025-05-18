@@ -107,6 +107,42 @@ export async function listPictureVoByPageWithCacheUsingPost(
   })
 }
 
+/** createOutPaintingTaskResponseBaseResponse POST /api/picture/out_painting/create_task */
+export async function createOutPaintingTaskResponseBaseResponseUsingPost(
+  body: API.CreatePictureOutPaintingTaskRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseCreateOutPaintingTaskResponse_>(
+    '/api/picture/out_painting/create_task',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: body,
+      ...(options || {}),
+    }
+  )
+}
+
+/** getOutPaintingTaskResponseBaseResponse GET /api/picture/out_painting/get_task */
+export async function getOutPaintingTaskResponseBaseResponseUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getOutPaintingTaskResponseBaseResponseUsingGETParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseGetOutPaintingTaskResponse_>(
+    '/api/picture/out_painting/get_task',
+    {
+      method: 'GET',
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    }
+  )
+}
+
 /** doPictureReview POST /api/picture/review */
 export async function doPictureReviewUsingPost(
   body: API.PictureReviewRequest,
